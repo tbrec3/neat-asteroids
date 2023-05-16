@@ -38,20 +38,24 @@ class Ship:
         win.blit(rotated_img, new_rect.topleft)
 
     def move(self):
+        # Update position
         self.x += cos(radians(self.move_dir)) * self.vel
         self.y -= sin(radians(self.move_dir)) * self.vel
 
-        win_height, win_width = pygame.display.get_window_size()
+        # Get window size for boundaries
+        win_width, win_height = pygame.display.get_window_size()
+
+        # Distance from boundary to respawn on the other side
         margin = -30
 
-        # Setting bounds
+        # Respawn at boundary
         if self.x < margin:
-            self.x = win_height
-        if self.x > win_height:
+            self.x = win_width
+        if self.x > win_width:
             self.x = margin
         if self.y < margin:
-            self.y = win_width
-        if self.y > win_width:
+            self.y = win_height
+        if self.y > win_height:
             self.y = margin
 
     def push(self, rate, max_vel=4):
