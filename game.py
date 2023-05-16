@@ -1,11 +1,10 @@
-from math import pi, tan
-from numpy import arccos, arctan, cos, sin, radians, sqrt, square, degrees
-import pygame
 import os
+import pygame
 import random
 
+from numpy import arccos, arctan, cos, sin, radians, sqrt, square, degrees
 from pygame.constants import K_DOWN, K_LEFT, K_RIGHT, K_UP, K_SPACE
-from pygame.surface import Surface
+
 pygame.font.init()
 
 WIN_HEIGHT, WIN_WIDTH = 700, 700
