@@ -122,17 +122,17 @@ def main():
                 asteroid_spawn_delay_count = 0
 
             # Offscreen Removal
-            for bullet in bullets:
+            for bullet in bullets[:]:
                 if bullet.is_offscreen():
                     bullets.remove(bullet)
 
-            for asteroid in asteroids:
+            for asteroid in asteroids[:]:
                 if asteroid.is_offscreen():
                     asteroids.remove(asteroid)
 
             # Collision Detection
             for asteroid in asteroids[:]:
-                for bullet in bullets:
+                for bullet in bullets[:]:
                     if collide(bullet, asteroid):
                         bullets.remove(bullet)
                         if asteroid.rank == 3:
