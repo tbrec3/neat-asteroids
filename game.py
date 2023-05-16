@@ -4,8 +4,8 @@ import random
 
 from classes.ship import Ship
 from classes.bullet import Bullet
+from classes.asteroid import Asteroid, spawn_asteroid
 
-from numpy import arccos, arctan, cos, sin, radians, sqrt, square, degrees
 from pygame.constants import K_DOWN, K_LEFT, K_RIGHT, K_UP, K_SPACE
 
 pygame.font.init()
@@ -33,78 +33,12 @@ BULLET_VEL = 5
 
 # Assets
 LOGO = pygame.image.load(os.path.join("assets", "icon.png"))
-ASTEROID_IMG1 = pygame.image.load(os.path.join("assets", "Asteroid_1.png"))
-ASTEROID_IMG2 = pygame.image.load(os.path.join("assets", "Asteroid_2.png"))
-ASTEROID_IMG3 = pygame.image.load(os.path.join("assets", "Asteroid_3.png"))
-
-
-
-
-
-class Asteroid:
-    def __init__(self, x, y, rank) -> None:
-        self.rank = rank
-        self.x = x
-        self.y = y
-        self.rot = 0
-        self.rot_vel = ASTEROID_ROT_VEL * (random.random()-0.5)
-        self.move_vel = ASTEROID_VEL * (random.random() + 0.1)
-
-        # Calculate Direction to Middle of Screen
-        x_offset = (WIN_WIDTH // 2) - self.x
-        y_offset = (WIN_HEIGHT // 2) - self.y
-        if x_offset != 0:
-            self.move_dir = -arctan(y_offset / x_offset) + \
-                (random.random()-0.5)*1.5
-        else:
-            self.move_dir = 0
-
-        if rank == 1:
-            self.img = ASTEROID_IMG1
-        elif rank == 2:
-            self.img = ASTEROID_IMG2
-        elif rank == 3:
-            self.img = ASTEROID_IMG3
-
-        self.mask = pygame.mask.from_surface(self.img)
-
-    def draw(self, win):
-        rotated_img = pygame.transform.rotate(self.img, self.rot)
-        new_rect = rotated_img.get_rect(
-            center=self.img.get_rect(topleft=(self.x, self.y)).center)
-        self.mask = pygame.mask.from_surface(rotated_img)
-        win.blit(rotated_img, new_rect.topleft)
-
-    def move(self):
-        self.x += cos(self.move_dir) * self.move_vel
-        self.y -= sin(self.move_dir) * self.move_vel
-
-        self.rot += self.rot_vel
-
-    def is_offscreen(self) -> bool:
-        if ((-150) < self.x < WIN_WIDTH+150) and ((-150) < self.y < WIN_HEIGHT+150):
-            return False
-        else:
-            return True
-
 
 def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.y
     # (x, y)
     return obj1.mask.overlap(obj2.mask, (int(offset_x), int(offset_y))) != None
-
-
-def spawn_asteroid(asteroids: list):
-    rand_x = random.randrange(-100, WIN_WIDTH + 30)
-
-    if 0 < rand_x < WIN_WIDTH:
-        rand_y = random.randrange(-100, WIN_HEIGHT + 30, WIN_HEIGHT + 129)
-    else:
-        rand_y = random.randrange(-100, WIN_HEIGHT + 30)
-
-    asteroids.append(
-        Asteroid(rand_x, rand_y, random.choice([1, 1, 1, 2, 2, 3])))
 
 def main():
     pygame.display.init()
@@ -183,7 +117,7 @@ def main():
 
             # Asteroids spawning
             if not asteroid_spawn_delay_count % asteroid_spawn_delay:
-                spawn_asteroid(asteroids)
+                spawn_asteroid(asteroids, ASTEROID_ROT_VEL, ASTEROID_VEL)
                 asteroid_spawn_delay = random.randrange(100, 200, 2)
                 asteroid_spawn_delay_count = 0
 
@@ -203,15 +137,15 @@ def main():
                         bullets.remove(bullet)
                         if asteroid.rank == 3:
                             asteroids.append(
-                                Asteroid(asteroid.x, asteroid.y, 2))
+                                Asteroid(asteroid.x, asteroid.y, 2, ASTEROID_ROT_VEL, ASTEROID_VEL))
                             asteroids.append(
-                                Asteroid(asteroid.x, asteroid.y, 2))
+                                Asteroid(asteroid.x, asteroid.y, 2, ASTEROID_ROT_VEL, ASTEROID_VEL))
                             score += 50
                         if asteroid.rank == 2:
                             asteroids.append(
-                                Asteroid(asteroid.x, asteroid.y, 1))
+                                Asteroid(asteroid.x, asteroid.y, 1, ASTEROID_ROT_VEL, ASTEROID_VEL))
                             asteroids.append(
-                                Asteroid(asteroid.x, asteroid.y, 1))
+                                Asteroid(asteroid.x, asteroid.y, 1, ASTEROID_ROT_VEL, ASTEROID_VEL))
                             score += 25
                         if asteroid.rank == 1:
                             score += 10
