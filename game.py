@@ -38,7 +38,7 @@ def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.y
     # (x, y)
-    return obj1.mask.overlap(obj2.mask, (int(offset_x), int(offset_y))) != None
+    return obj1.mask.overlap(obj2.mask, (int(offset_x), int(offset_y))) is not None
 
 def main():
     pygame.display.init()
@@ -173,14 +173,14 @@ def main():
             if keys[K_RIGHT]:
                 ship.tilt_right(-5)
             if keys[K_SPACE]:
-                if shoot_enable == True:
+                if shoot_enable is True:
                     bullets.append(Bullet(ship, BULLET_VEL))
                     shoot_enable = False
                     shoot_delay_count = 0
             # if keys[K_DOWN]:
             #     fps = 10
-            else:
-                fps = 60
+            # else:
+            #     fps = 60
 
             draw_window(WIN)
         else:
