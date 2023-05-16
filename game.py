@@ -3,6 +3,7 @@ import pygame
 import random
 
 from classes.ship import Ship
+from classes.bullet import Bullet
 
 from numpy import arccos, arctan, cos, sin, radians, sqrt, square, degrees
 from pygame.constants import K_DOWN, K_LEFT, K_RIGHT, K_UP, K_SPACE
@@ -38,27 +39,6 @@ ASTEROID_IMG3 = pygame.image.load(os.path.join("assets", "Asteroid_3.png"))
 
 
 
-
-class Bullet:
-    def __init__(self, ship: Ship) -> None:
-        self.x = ship.x + ship.surface.get_rect().centerx
-        self.y = ship.y + ship.surface.get_rect().centery
-        self.dir = ship.rot
-        self.vel = BULLET_VEL
-
-        self.surface = pygame.Surface((2, 2))
-        self.surface.fill(WHITE)
-        self.mask = pygame.mask.from_surface(self.surface)
-
-    def draw(self, win):
-        win.blit(self.surface, (self.x, self.y))
-
-    def move(self):
-        self.x += cos(radians(self.dir)) * self.vel
-        self.y -= sin(radians(self.dir)) * self.vel
-
-    def is_offscreen(self) -> bool:
-        return self.x < 0 or self.x > WIN_WIDTH or self.y < 0 or self.y > WIN_HEIGHT
 
 
 class Asteroid:
@@ -260,7 +240,7 @@ def main():
                 ship.tilt_right(-5)
             if keys[K_SPACE]:
                 if shoot_enable == True:
-                    bullets.append(Bullet(ship))
+                    bullets.append(Bullet(ship, BULLET_VEL))
                     shoot_enable = False
                     shoot_delay_count = 0
             # if keys[K_DOWN]:
